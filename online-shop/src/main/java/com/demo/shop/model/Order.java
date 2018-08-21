@@ -1,73 +1,52 @@
 package com.demo.shop.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name="tb_order")
 public class Order {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Getter @Setter
     private Long id;
-	
-//	@Column(name="number")
+
+	@Getter @Setter
 	private Long number;
 	
 	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="customer_id")
+	@Getter @Setter
 	private Customer customer;
 	
+	@Getter @Setter
 	private String reason;
 	
+	@Getter @Setter
 	private String service;
 	
-	public Long getId() {
-		return id;
+	@Getter @Setter
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Item> items;
+	
+	public void addItem(Item item) {
+	  this.items.add(item);
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getNumber() {
-		return number;
-	}
-
-	public void setNumber(Long orderNumber) {
-		this.number = orderNumber;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public String getService() {
-		return service;
-	}
-
-	public void setService(String service) {
-		this.service = service;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
 }
